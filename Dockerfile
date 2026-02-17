@@ -1,16 +1,15 @@
 # Multi-stage build for SysML v2 API Services
 
 # Stage 1: Build stage
-FROM eclipse-temurin:11-jdk as builder
+FROM eclipse-temurin:11-jdk AS builder
 
-# Install sbt
+# Install sbt manually
 RUN apt-get update && \
-    apt-get install -y curl gnupg && \
-    echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list && \
-    echo "deb https://repo.scala-sbt.org/scalasbt/debian /" | tee /etc/apt/sources.list.d/sbt_old.list && \
-    curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | apt-key add && \
-    apt-get update && \
-    apt-get install -y sbt && \
+    apt-get install -y curl && \
+    curl -L -o sbt.tgz https://github.com/sbt/sbt/releases/download/v1.10.5/sbt-1.10.5.tgz && \
+    tar -xzf sbt.tgz -C /usr/local && \
+    ln -s /usr/local/sbt/bin/sbt /usr/bin/sbt && \
+    rm sbt.tgz && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 

@@ -2,17 +2,118 @@
 Pilot implementation of REST/HTTP Platform-specific model (PSM) of SysML v2 API and Services, managed by the SysML v2 Submission Team (SST).
 
 ## Usage Scenarios
-There are two main usage scenarios. 
+There are three main usage scenarios. 
 
 1. **Scenario 1: Accessing SysML v2 REST/HTTP API deployed on SST servers**
 You do not need to clone this repository or setup anything on your local machine. You can access the REST/HTTP API on one of our deployed servers via Swagger doc, or a REST API client (e.g Postman) on your local machine. Ignore the rest of the instructions if you are interested in this scenario. Contact the SST to learn more.
 
-2. **Scenario 2: Running the SysML v2 REST/HTTP API and Services locally on your machine**
-You can clone this repository, setup the backend database (PostgreSQL), and run the pilot implementation of SysML v2 API & Services locally on your machine. The same REST API that is deployed on the SST servers will be available on localhost. Follow the instructions below if you are interested in this scenario.
+2. **Scenario 2: Running the SysML v2 REST/HTTP API and Services using Docker (Recommended)**
+You can use Docker and Docker Compose to quickly run the SysML v2 API & Services locally without needing to install Java, sbt, or PostgreSQL manually. This is the easiest way to get started. See [Running with Docker](#running-with-docker) below.
+
+3. **Scenario 3: Running the SysML v2 REST/HTTP API and Services locally (Manual Setup)**
+You can clone this repository, setup the backend database (PostgreSQL), install Java 11 and sbt, and run the pilot implementation of SysML v2 API & Services locally on your machine. The same REST API that is deployed on the SST servers will be available on localhost. See [Manual Setup](#manual-setup) below.
 
 Refer to the [SysML v2 API Cookbook](https://github.com/Systems-Modeling/SysML-v2-API-Cookbook) for examples and patterns to use the SysML v2 API, specifically the REST/HTTP API.
 
-## Setting up pilot implementation of SysML v2 API and Services on your local machine
+## Running with Docker
+
+The easiest way to run the SysML v2 API and Services is using Docker Compose, which will automatically set up both the PostgreSQL database and the API service.
+
+### Prerequisites
+- [Docker](https://docs.docker.com/get-docker/) installed on your machine
+- [Docker Compose](https://docs.docker.com/compose/install/) installed (usually included with Docker Desktop)
+
+### Quick Start
+
+1. **Clone this repository**
+   ```bash
+   git clone https://github.com/leon-thomm/SysML-v2-API-Services.git
+   cd SysML-v2-API-Services
+   ```
+
+2. **Start the services using Docker Compose**
+   ```bash
+   docker compose up
+   ```
+   
+   This command will:
+   - Pull the PostgreSQL image (if not already available)
+   - Build the SysML v2 API service Docker image
+   - Start both the database and API service
+   - Create a persistent volume for the database
+
+   The first build may take 10-15 minutes as it needs to download dependencies and compile the application.
+
+3. **Access the API**
+   
+   Once the services are running, open your web browser and navigate to:
+   ```
+   http://localhost:9000/docs/
+   ```
+   
+   You should see the Swagger documentation for the SysML v2 REST/HTTP API.
+
+### Docker Compose Commands
+
+- **Start services in detached mode (background)**
+  ```bash
+  docker compose up -d
+  ```
+
+- **Stop services**
+  ```bash
+  docker compose down
+  ```
+
+- **Stop services and remove volumes (deletes database data)**
+  ```bash
+  docker compose down -v
+  ```
+
+- **View logs**
+  ```bash
+  docker compose logs -f
+  ```
+
+- **Rebuild the API service** (e.g., after code changes)
+  ```bash
+  docker compose build
+  docker compose up
+  ```
+
+### Using Pre-built Docker Image
+
+If available, you can pull a pre-built image instead of building locally:
+
+```bash
+# Pull the pre-built image (replace with actual registry/image name when published)
+docker pull ghcr.io/leon-thomm/sysml-v2-api-services:latest
+
+# Run with docker compose using the pre-built image
+docker compose up
+```
+
+### Environment Variables
+
+The Docker setup uses the following environment variables for database configuration (defined in `docker-compose.yml`):
+
+| Variable | Default Value | Description |
+|----------|---------------|-------------|
+| `DB_HOST` | `postgres` | PostgreSQL hostname |
+| `DB_PORT` | `5432` | PostgreSQL port |
+| `DB_NAME` | `sysml2` | Database name |
+| `DB_USER` | `postgres` | Database username |
+| `DB_PASSWORD` | `mysecretpassword` | Database password |
+
+You can override these by creating a `.env` file in the project root or by modifying `docker-compose.yml`.
+
+### Troubleshooting
+
+- **Port already in use**: If port 9000 or 5432 is already in use, modify the port mappings in `docker-compose.yml`
+- **Build failures**: Ensure you have a stable internet connection for downloading dependencies
+- **Database connection issues**: Wait a few seconds for PostgreSQL to fully initialize before the API service starts
+
+## Manual Setup
 
 ### Setup PostgreSQL
 This pilot implementation uses PostgreSQL as the backend database. The easiest way to setup PostgreSQL locally is to run it as a Docker container.
