@@ -2,12 +2,12 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:15
     container_name: sysml2-postgres
     environment:
       POSTGRES_DB: sysml2
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-mysecretpassword}
     ports:
       - "5432:5432"
     volumes:
@@ -32,7 +32,7 @@ services:
       DB_PORT: 5432
       DB_NAME: sysml2
       DB_USER: postgres
-      DB_PASSWORD: mysecretpassword
+      DB_PASSWORD: ${DB_PASSWORD:-mysecretpassword}
     depends_on:
       postgres:
         condition: service_healthy

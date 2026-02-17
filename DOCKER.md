@@ -17,9 +17,12 @@ This guide provides detailed information about deploying and using the SysML v2 
 The fastest way to run the SysML v2 API Services:
 
 ```bash
-# Clone the repository
+# Clone the repository (adjust URL to match your fork/repository)
 git clone https://github.com/leon-thomm/SysML-v2-API-Services.git
 cd SysML-v2-API-Services
+
+# Set a secure database password (recommended)
+export DB_PASSWORD=your-secure-password
 
 # Start with Docker Compose
 docker compose up
@@ -332,10 +335,13 @@ The repository includes a GitHub Actions workflow (`.github/workflows/docker-pub
 - Tags images based on git tags and branches
 - Enables easy deployment of pre-built images
 
-To use the published image:
+To use the published image (adjust repository name as needed):
 ```bash
+# Replace with the actual repository owner/name
 docker pull ghcr.io/leon-thomm/sysml-v2-api-services:latest
 ```
+
+**Note**: The image name will match your GitHub repository structure (`ghcr.io/owner/repository:tag`).
 
 ## Additional Resources
 

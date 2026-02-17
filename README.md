@@ -31,7 +31,14 @@ The easiest way to run the SysML v2 API and Services is using Docker Compose, wh
    cd SysML-v2-API-Services
    ```
 
-2. **Start the services using Docker Compose**
+2. **(Optional) Set database password**
+   ```bash
+   export DB_PASSWORD=your-secure-password
+   ```
+   
+   If not set, the default password `mysecretpassword` will be used (not recommended for production).
+
+3. **Start the services using Docker Compose**
    ```bash
    docker compose up
    ```
@@ -105,7 +112,20 @@ The Docker setup uses the following environment variables for database configura
 | `DB_USER` | `postgres` | Database username |
 | `DB_PASSWORD` | `mysecretpassword` | Database password |
 
-You can override these by creating a `.env` file in the project root or by modifying `docker-compose.yml`.
+**Security Note**: The default password is for development only. For production deployments, always set a strong password using the `DB_PASSWORD` environment variable.
+
+You can override these by creating a `.env` file in the project root:
+
+```env
+DB_PASSWORD=your-secure-password
+```
+
+Or by setting environment variables before running docker compose:
+
+```bash
+export DB_PASSWORD=your-secure-password
+docker compose up
+```
 
 ### Troubleshooting
 
