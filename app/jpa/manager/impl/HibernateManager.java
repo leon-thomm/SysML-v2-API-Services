@@ -42,9 +42,28 @@ public class HibernateManager implements JPAManager {
     public HibernateManager() {
         Map<String, String> properties = new HashMap<>();
         
-        // Override database connection properties with environment variables if provided
-        // Note: No validation is performed to allow falling back to persistence.xml defaults
-        // In production deployments, ensure environment variables are properly set
+        /*
+         * Docker Configuration Support:
+         * 
+         * The database connection settings in persistence.xml are hardcoded to:
+         *   - URL: jdbc:postgresql://localhost:5432/sysml2
+         *   - User: postgres
+         *   - Password: mysecretpassword
+         * 
+         * This works for local development but fails in Docker because:
+         * 1. The PostgreSQL container hostname is "postgres" (not "localhost")
+         * 2. Users need ability to set secure passwords for production
+         * 
+         * Solution: Read environment variables to override persistence.xml values.
+         * If no environment variables are set, falls back to persistence.xml defaults
+         * for backward compatibility with existing local development setups.
+         * 
+         * Environment variables:
+         *   DB_HOST, DB_PORT, DB_NAME - Used to construct JDBC URL
+         *   DB_USER - Database username
+         *   DB_PASSWORD - Database password
+         */
+        
         String dbHost = System.getenv("DB_HOST");
         String dbPort = System.getenv("DB_PORT");
         String dbName = System.getenv("DB_NAME");

@@ -17,121 +17,34 @@ Refer to the [SysML v2 API Cookbook](https://github.com/Systems-Modeling/SysML-v
 
 ## Running with Docker
 
-The easiest way to run the SysML v2 API and Services is using Docker Compose, which will automatically set up both the PostgreSQL database and the API service.
-
-### Prerequisites
-- [Docker](https://docs.docker.com/get-docker/) installed on your machine
-- [Docker Compose](https://docs.docker.com/compose/install/) installed (usually included with Docker Desktop)
+Use Docker Compose to run both PostgreSQL and the API without installing Java, sbt, or PostgreSQL manually.
 
 ### Quick Start
 
-1. **Clone this repository**
-   ```bash
-   git clone https://github.com/leon-thomm/SysML-v2-API-Services.git
-   cd SysML-v2-API-Services
-   ```
-
-2. **(Optional) Set database password**
-   ```bash
-   export DB_PASSWORD=your-secure-password
-   ```
-   
-   If not set, the default password `mysecretpassword` will be used (not recommended for production).
-
-3. **Start the services using Docker Compose**
-   ```bash
-   docker compose up
-   ```
-   
-   This command will:
-   - Pull the PostgreSQL image (if not already available)
-   - Build the SysML v2 API service Docker image
-   - Start both the database and API service
-   - Create a persistent volume for the database
-
-   The first build may take 10-15 minutes as it needs to download dependencies and compile the application.
-
-4. **Access the API**
-   
-   Once the services are running, open your web browser and navigate to:
-   ```
-   http://localhost:9000/docs/
-   ```
-   
-   You should see the Swagger documentation for the SysML v2 REST/HTTP API.
-
-### Docker Compose Commands
-
-- **Start services in detached mode (background)**
-  ```bash
-  docker compose up -d
-  ```
-
-- **Stop services**
-  ```bash
-  docker compose down
-  ```
-
-- **Stop services and remove volumes (deletes database data)**
-  ```bash
-  docker compose down -v
-  ```
-
-- **View logs**
-  ```bash
-  docker compose logs -f
-  ```
-
-- **Rebuild the API service** (e.g., after code changes)
-  ```bash
-  docker compose build
-  docker compose up
-  ```
-
-### Using Pre-built Docker Image
-
-If available, you can pull a pre-built image instead of building locally:
-
 ```bash
-# Pull the pre-built image (replace with actual registry/image name when published)
-docker pull ghcr.io/leon-thomm/sysml-v2-api-services:latest
+git clone https://github.com/leon-thomm/SysML-v2-API-Services.git
+cd SysML-v2-API-Services
 
-# Run with docker compose using the pre-built image
-docker compose up
-```
-
-### Environment Variables
-
-The Docker setup uses the following environment variables for database configuration (defined in `docker-compose.yml`):
-
-| Variable | Default Value | Description |
-|----------|---------------|-------------|
-| `DB_HOST` | `postgres` | PostgreSQL hostname |
-| `DB_PORT` | `5432` | PostgreSQL port |
-| `DB_NAME` | `sysml2` | Database name |
-| `DB_USER` | `postgres` | Database username |
-| `DB_PASSWORD` | `mysecretpassword` | Database password |
-
-**Security Note**: The default password is for development only. For production deployments, always set a strong password using the `DB_PASSWORD` environment variable.
-
-You can override these by creating a `.env` file in the project root:
-
-```env
-DB_PASSWORD=your-secure-password
-```
-
-Or by setting environment variables before running docker compose:
-
-```bash
+# Optional: set database password (defaults to 'mysecretpassword')
 export DB_PASSWORD=your-secure-password
+
 docker compose up
 ```
 
-### Troubleshooting
+Access the API at `http://localhost:9000/docs/`
 
-- **Port already in use**: If port 9000 or 5432 is already in use, modify the port mappings in `docker-compose.yml`
-- **Build failures**: Ensure you have a stable internet connection for downloading dependencies
-- **Database connection issues**: Wait a few seconds for PostgreSQL to fully initialize before the API service starts
+**Note**: First build takes 10-15 minutes to download dependencies and compile.
+
+### Common Commands
+
+```bash
+docker compose up -d        # Start in background
+docker compose down         # Stop services
+docker compose logs -f      # View logs
+docker compose build        # Rebuild after code changes
+```
+
+See [DOCKER.md](DOCKER.md) for configuration options and troubleshooting.
 
 ## Manual Setup
 
