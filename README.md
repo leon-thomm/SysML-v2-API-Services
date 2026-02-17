@@ -51,7 +51,7 @@ The easiest way to run the SysML v2 API and Services is using Docker Compose, wh
 
    The first build may take 10-15 minutes as it needs to download dependencies and compile the application.
 
-3. **Access the API**
+4. **Access the API**
    
    Once the services are running, open your web browser and navigate to:
    ```

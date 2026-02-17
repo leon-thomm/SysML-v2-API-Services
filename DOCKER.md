@@ -35,7 +35,7 @@ docker compose up
 The Docker setup consists of two main components:
 
 ### 1. PostgreSQL Database (`postgres` service)
-- **Image**: Official PostgreSQL image from Docker Hub
+- **Image**: PostgreSQL 15 from Docker Hub
 - **Port**: 5432
 - **Data Persistence**: Uses a named volume `postgres_data`
 - **Health Check**: Built-in health check ensures database is ready before API starts

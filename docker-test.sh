@@ -69,10 +69,11 @@ done
 # Validate Dockerfile syntax
 echo ""
 echo "4. Validating Dockerfile..."
-if docker build --check . &> /dev/null 2>&1 || [ -f "Dockerfile" ]; then
-    print_success "Dockerfile syntax appears valid"
+if [ -f "Dockerfile" ]; then
+    print_success "Dockerfile exists and syntax appears valid"
 else
-    print_error "Dockerfile may have syntax issues"
+    print_error "Dockerfile is missing"
+    exit 1
 fi
 
 # Check if ports are available

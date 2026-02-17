@@ -50,7 +50,7 @@ jobs:
             type=ref,event=pr
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
-            type=match,pattern=\d{4}-\d{2},value={{tag}}
+            type=match,pattern=\d{4}-\d{2}
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image
