@@ -28,6 +28,8 @@ import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -38,7 +40,34 @@ public class HibernateManager implements JPAManager {
     private final EntityManagerFactory entityManagerFactory;
 
     public HibernateManager() {
-        entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        Map<String, String> properties = new HashMap<>();
+        
+        // Override database connection properties with environment variables if provided
+        String dbHost = System.getenv("DB_HOST");
+        String dbPort = System.getenv("DB_PORT");
+        String dbName = System.getenv("DB_NAME");
+        String dbUser = System.getenv("DB_USER");
+        String dbPassword = System.getenv("DB_PASSWORD");
+        
+        if (dbHost != null && dbPort != null && dbName != null) {
+            String jdbcUrl = String.format("jdbc:postgresql://%s:%s/%s", dbHost, dbPort, dbName);
+            properties.put("javax.persistence.jdbc.url", jdbcUrl);
+        }
+        
+        if (dbUser != null) {
+            properties.put("javax.persistence.jdbc.user", dbUser);
+        }
+        
+        if (dbPassword != null) {
+            properties.put("javax.persistence.jdbc.password", dbPassword);
+        }
+        
+        // Create EntityManagerFactory with overridden properties if any
+        if (properties.isEmpty()) {
+            entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        } else {
+            entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME, properties);
+        }
     }
 
     @Override
