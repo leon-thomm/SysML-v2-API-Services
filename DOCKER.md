@@ -270,8 +270,6 @@ docker compose exec sysml2-api ps aux
 ### Example Production docker-compose.yml
 
 ```yaml
-version: '3.8'
-
 services:
   postgres:
     image: postgres:15
