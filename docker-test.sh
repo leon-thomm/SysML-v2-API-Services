@@ -81,11 +81,33 @@ echo ""
 echo "5. Checking if required ports are available..."
 check_port() {
     local port=$1
-    if lsof -Pi :$port -sTCP:LISTEN -t >/dev/null 2>&1 ; then
-        print_error "Port $port is already in use"
-        return 1
+    # Try different methods to check port availability
+    if command -v lsof &> /dev/null; then
+        if lsof -Pi :$port -sTCP:LISTEN -t >/dev/null 2>&1 ; then
+            print_error "Port $port is already in use"
+            return 1
+        else
+            print_success "Port $port is available"
+            return 0
+        fi
+    elif command -v ss &> /dev/null; then
+        if ss -ln | grep -q ":$port " ; then
+            print_error "Port $port is already in use"
+            return 1
+        else
+            print_success "Port $port is available"
+            return 0
+        fi
+    elif command -v netstat &> /dev/null; then
+        if netstat -ln | grep -q ":$port " ; then
+            print_error "Port $port is already in use"
+            return 1
+        else
+            print_success "Port $port is available"
+            return 0
+        fi
     else
-        print_success "Port $port is available"
+        print_info "Cannot check port $port (no lsof/ss/netstat available)"
         return 0
     fi
 }

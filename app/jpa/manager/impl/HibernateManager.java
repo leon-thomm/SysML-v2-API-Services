@@ -43,6 +43,8 @@ public class HibernateManager implements JPAManager {
         Map<String, String> properties = new HashMap<>();
         
         // Override database connection properties with environment variables if provided
+        // Note: No validation is performed to allow falling back to persistence.xml defaults
+        // In production deployments, ensure environment variables are properly set
         String dbHost = System.getenv("DB_HOST");
         String dbPort = System.getenv("DB_PORT");
         String dbName = System.getenv("DB_NAME");
