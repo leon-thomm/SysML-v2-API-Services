@@ -22,8 +22,11 @@ docker compose up
 | `DB_USER` | `postgres` | Database username |
 | `DB_PASSWORD` | `mysecretpassword` | Database password |
 | `HIBERNATE_DDL_AUTO` | `update` | Schema mode: `update` (recommended), `create`, `create-drop`, `validate`, `none` |
+| `PLAY_SECRET_KEY` | auto-generated | Play Framework secret key (change for production) |
 
 **Note**: The default `update` mode creates tables on first run and preserves data between restarts. Use `create-drop` only for testing (drops all data on shutdown).
+
+**Security**: For production, generate a secure secret key with: `head -c 32 /dev/urandom | base64`
 
 Set via `.env` file or shell export before running `docker compose up`.
 

@@ -32,6 +32,7 @@ services:
       DB_USER: postgres
       DB_PASSWORD: ${DB_PASSWORD:-mysecretpassword}
       HIBERNATE_DDL_AUTO: update
+      PLAY_SECRET_KEY: ${PLAY_SECRET_KEY:-sysml2-docker-secret-key-change-in-production-pleasechange123456}
     depends_on:
       postgres:
         condition: service_healthy

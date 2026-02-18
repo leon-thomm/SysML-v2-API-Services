@@ -43,7 +43,8 @@ ENV DB_HOST=postgres \
     DB_NAME=sysml2 \
     DB_USER=postgres \
     DB_PASSWORD=mysecretpassword \
-    HIBERNATE_DDL_AUTO=update
+    HIBERNATE_DDL_AUTO=update \
+    PLAY_SECRET_KEY="sysml2-docker-secret-key-change-in-production-pleasechange123456"
 
 # Run the application
 CMD ["/app/bin/sysml-v2-api-services", "-Dconfig.resource=application.conf"]
