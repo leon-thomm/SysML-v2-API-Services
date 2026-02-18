@@ -49,10 +49,12 @@ public class HibernateManager implements JPAManager {
          *   - URL: jdbc:postgresql://localhost:5432/sysml2
          *   - User: postgres
          *   - Password: mysecretpassword
+         *   - hibernate.hbm2ddl.auto: create-drop
          * 
          * This works for local development but fails in Docker because:
          * 1. The PostgreSQL container hostname is "postgres" (not "localhost")
          * 2. Users need ability to set secure passwords for production
+         * 3. "create-drop" mode drops all tables on shutdown, losing data between container restarts
          * 
          * Solution: Read environment variables to override persistence.xml values.
          * If no environment variables are set, falls back to persistence.xml defaults
@@ -62,6 +64,7 @@ public class HibernateManager implements JPAManager {
          *   DB_HOST, DB_PORT, DB_NAME - Used to construct JDBC URL
          *   DB_USER - Database username
          *   DB_PASSWORD - Database password
+         *   HIBERNATE_DDL_AUTO - Schema generation mode (create, create-drop, update, validate, none)
          */
         
         String dbHost = System.getenv("DB_HOST");
@@ -69,6 +72,7 @@ public class HibernateManager implements JPAManager {
         String dbName = System.getenv("DB_NAME");
         String dbUser = System.getenv("DB_USER");
         String dbPassword = System.getenv("DB_PASSWORD");
+        String hibernateDdlAuto = System.getenv("HIBERNATE_DDL_AUTO");
         
         if (dbHost != null && dbPort != null && dbName != null) {
             String jdbcUrl = String.format("jdbc:postgresql://%s:%s/%s", dbHost, dbPort, dbName);
@@ -81,6 +85,10 @@ public class HibernateManager implements JPAManager {
         
         if (dbPassword != null) {
             properties.put("javax.persistence.jdbc.password", dbPassword);
+        }
+        
+        if (hibernateDdlAuto != null) {
+            properties.put("hibernate.hbm2ddl.auto", hibernateDdlAuto);
         }
         
         // Create EntityManagerFactory with overridden properties if any

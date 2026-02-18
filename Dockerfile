@@ -42,7 +42,8 @@ ENV DB_HOST=postgres \
     DB_PORT=5432 \
     DB_NAME=sysml2 \
     DB_USER=postgres \
-    DB_PASSWORD=mysecretpassword
+    DB_PASSWORD=mysecretpassword \
+    HIBERNATE_DDL_AUTO=update
 
 # Run the application
 CMD ["/app/bin/sysml-v2-api-services", "-Dconfig.resource=application.conf"]
