@@ -2,17 +2,51 @@
 Pilot implementation of REST/HTTP Platform-specific model (PSM) of SysML v2 API and Services, managed by the SysML v2 Submission Team (SST).
 
 ## Usage Scenarios
-There are two main usage scenarios. 
+There are three main usage scenarios. 
 
 1. **Scenario 1: Accessing SysML v2 REST/HTTP API deployed on SST servers**
 You do not need to clone this repository or setup anything on your local machine. You can access the REST/HTTP API on one of our deployed servers via Swagger doc, or a REST API client (e.g Postman) on your local machine. Ignore the rest of the instructions if you are interested in this scenario. Contact the SST to learn more.
 
-2. **Scenario 2: Running the SysML v2 REST/HTTP API and Services locally on your machine**
-You can clone this repository, setup the backend database (PostgreSQL), and run the pilot implementation of SysML v2 API & Services locally on your machine. The same REST API that is deployed on the SST servers will be available on localhost. Follow the instructions below if you are interested in this scenario.
+2. **Scenario 2: Running the SysML v2 REST/HTTP API and Services using Docker (Recommended)**
+You can use Docker and Docker Compose to quickly run the SysML v2 API & Services locally without needing to install Java, sbt, or PostgreSQL manually. This is the easiest way to get started. See [Running with Docker](#running-with-docker) below.
+
+3. **Scenario 3: Running the SysML v2 REST/HTTP API and Services locally (Manual Setup)**
+You can clone this repository, setup the backend database (PostgreSQL), install Java 11 and sbt, and run the pilot implementation of SysML v2 API & Services locally on your machine. The same REST API that is deployed on the SST servers will be available on localhost. See [Manual Setup](#manual-setup) below.
 
 Refer to the [SysML v2 API Cookbook](https://github.com/Systems-Modeling/SysML-v2-API-Cookbook) for examples and patterns to use the SysML v2 API, specifically the REST/HTTP API.
 
-## Setting up pilot implementation of SysML v2 API and Services on your local machine
+## Running with Docker
+
+Use Docker Compose to run both PostgreSQL and the API without installing Java, sbt, or PostgreSQL manually.
+
+### Quick Start
+
+```bash
+git clone https://github.com/leon-thomm/SysML-v2-API-Services.git
+cd SysML-v2-API-Services
+
+# Optional: set database password (defaults to 'mysecretpassword')
+export DB_PASSWORD=your-secure-password
+
+docker compose up
+```
+
+Access the API at `http://localhost:9000/docs/`
+
+**Note**: First build takes 10-15 minutes to download dependencies and compile.
+
+### Common Commands
+
+```bash
+docker compose up -d        # Start in background
+docker compose down         # Stop services
+docker compose logs -f      # View logs
+docker compose build        # Rebuild after code changes
+```
+
+See [DOCKER.md](DOCKER.md) for configuration options and troubleshooting.
+
+## Manual Setup
 
 ### Setup PostgreSQL
 This pilot implementation uses PostgreSQL as the backend database. The easiest way to setup PostgreSQL locally is to run it as a Docker container.

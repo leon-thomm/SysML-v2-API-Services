@@ -1,0 +1,33 @@
+# Build artifacts
+target/
+generated/
+logs/
+RUNNING_PID
+
+# IDE files
+.idea/
+.idea_modules/
+*.iml
+.classpath
+.project
+.settings/
+.bloop/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git files
+.git/
+.gitignore
+
+# Documentation
+*.md
+!README.md
+
+# Test files
+test/
+
+# Other
+postman.json
+clean.sh

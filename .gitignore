@@ -9,3 +9,6 @@ target
 /RUNNING_PID
 .DS_Store
 *.iml
+
+# Environment files with secrets
+.env

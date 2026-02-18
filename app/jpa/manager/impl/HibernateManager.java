@@ -28,6 +28,8 @@ import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -38,7 +40,63 @@ public class HibernateManager implements JPAManager {
     private final EntityManagerFactory entityManagerFactory;
 
     public HibernateManager() {
-        entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        Map<String, String> properties = new HashMap<>();
+        
+        /*
+         * Docker Configuration Support:
+         * 
+         * The database connection settings in persistence.xml are hardcoded to:
+         *   - URL: jdbc:postgresql://localhost:5432/sysml2
+         *   - User: postgres
+         *   - Password: mysecretpassword
+         *   - hibernate.hbm2ddl.auto: create-drop
+         * 
+         * This works for local development but fails in Docker because:
+         * 1. The PostgreSQL container hostname is "postgres" (not "localhost")
+         * 2. Users need ability to set secure passwords for production
+         * 3. "create-drop" mode drops all tables on shutdown, losing data between container restarts
+         * 
+         * Solution: Read environment variables to override persistence.xml values.
+         * If no environment variables are set, falls back to persistence.xml defaults
+         * for backward compatibility with existing local development setups.
+         * 
+         * Environment variables:
+         *   DB_HOST, DB_PORT, DB_NAME - Used to construct JDBC URL
+         *   DB_USER - Database username
+         *   DB_PASSWORD - Database password
+         *   HIBERNATE_DDL_AUTO - Schema generation mode (create, create-drop, update, validate, none)
+         */
+        
+        String dbHost = System.getenv("DB_HOST");
+        String dbPort = System.getenv("DB_PORT");
+        String dbName = System.getenv("DB_NAME");
+        String dbUser = System.getenv("DB_USER");
+        String dbPassword = System.getenv("DB_PASSWORD");
+        String hibernateDdlAuto = System.getenv("HIBERNATE_DDL_AUTO");
+        
+        if (dbHost != null && dbPort != null && dbName != null) {
+            String jdbcUrl = String.format("jdbc:postgresql://%s:%s/%s", dbHost, dbPort, dbName);
+            properties.put("javax.persistence.jdbc.url", jdbcUrl);
+        }
+        
+        if (dbUser != null) {
+            properties.put("javax.persistence.jdbc.user", dbUser);
+        }
+        
+        if (dbPassword != null) {
+            properties.put("javax.persistence.jdbc.password", dbPassword);
+        }
+        
+        if (hibernateDdlAuto != null) {
+            properties.put("hibernate.hbm2ddl.auto", hibernateDdlAuto);
+        }
+        
+        // Create EntityManagerFactory with overridden properties if any
+        if (properties.isEmpty()) {
+            entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        } else {
+            entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME, properties);
+        }
     }
 
     @Override
